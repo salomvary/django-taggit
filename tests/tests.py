@@ -704,6 +704,9 @@ class TaggableManagerTestCase(BaseTaggingTestCase):
         with self.assertNumQueries(0):
             foods = {f.name: {t.name for t in f.tags.all()} for f in list_prefetched}
             self.assertEqual(foods, {"orange": {"2", "4"}, "apple": {"1", "2"}})
+        with self.assertNumQueries(0):
+            foods = {f.name: sorted(list(f.tags.names())) for f in list_prefetched}
+            self.assertEqual(foods, {"orange": ["2", "4"], "apple": ["1", "2"]})
 
     def test_internal_type_is_manytomany(self):
         self.assertEqual(TaggableManager().get_internal_type(), "ManyToManyField")
